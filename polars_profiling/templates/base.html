@@ -1,0 +1,14 @@
+<style>
+table {
+    display: inline-block;
+}
+</style>
+<body>
+    {{base.table.to_html()}}
+
+    <br>
+
+    {% for profile in base.variables.values() %}
+    {{profile.to_html()}}
+    {% endfor %}
+</body>

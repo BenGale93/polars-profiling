@@ -1,0 +1,8 @@
+<table>
+    <tbody>
+        {% for p,v in percentiles.items() %}
+        <tr><th>{{p}}</th><td>{{v}}</td></tr>
+        {% endfor %}
+        <tr><th>IQR</th><td>{{iqr}}</td></tr>
+    </tbody>
+</table>

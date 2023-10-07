@@ -1,0 +1,7 @@
+<div>
+    <h3>{{manager.name}}</h3>
+    <p>{{manager.dtype}}</p>
+    {% for profile in manager.profiles %}
+    {{profile.to_html()}}
+    {% endfor %}
+</div>
