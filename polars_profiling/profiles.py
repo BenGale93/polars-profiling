@@ -142,3 +142,30 @@ class BasicTemporalProfiler(BaseProfiler[BasicTemporalProfile]):
 
     def result_constructor(self, *args: Any) -> BasicTemporalProfile:
         return BasicTemporalProfile(*args)
+
+
+@dataclass(slots=True)
+class StatsProfile:
+    std_dev: float
+    coeff_var: float
+    kurtosis: float
+    skew: float
+
+    def to_html(self) -> str:
+        return templates.render("stats.html", profile=self)
+
+
+class StatsProfiler(BaseProfiler[StatsProfile]):
+    def summary_expression(self) -> list[pl.Expr]:
+        return [
+            pl.all().std().prefix("std:"),
+            (pl.all().std() / pl.all().mean()).prefix("coeff_var:"),
+            pl.all().kurtosis().prefix("kurtosis:"),
+            pl.all().skew().prefix("skew:"),
+        ]
+
+    def dtype_filter(self) -> SelectorType:
+        return cs.numeric()
+
+    def result_constructor(self, *args: Any) -> StatsProfile:
+        return StatsProfile(*args)

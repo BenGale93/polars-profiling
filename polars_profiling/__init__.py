@@ -3,7 +3,6 @@ from collections import defaultdict
 from dataclasses import dataclass
 
 import polars as pl
-from jinja2 import Template
 
 from polars_profiling import profiles, templates
 
@@ -22,6 +21,7 @@ PROFILER_TYPES: list[type[profiles.BaseProfiler[profiles.BaseProfile]]] = [
     profiles.NumericProfiler,
     profiles.BasicTemporalProfiler,
     profiles.QuantileProfiler,
+    profiles.StatsProfiler,
 ]
 
 
@@ -57,12 +57,6 @@ def get_table_summary(df: pl.DataFrame) -> TableSummary:
     }
 
     return TableSummary(variables, observations, duplicates, variable_types)
-
-
-BASE_DESCRIPTION = Template(
-    """
-    """
-)
 
 
 @dataclass
