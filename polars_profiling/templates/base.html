@@ -2,13 +2,20 @@
 table {
     display: inline-block;
 }
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    width: 1000px;
+}
 </style>
 <body>
-    {{base.table.to_html()}}
+    <div class="container">
+        {{base.table.to_html()}}
 
-    <br>
+        <br>
 
-    {% for profile in base.variables.values() %}
-    {{profile.to_html()}}
-    {% endfor %}
+        {% for profile in base.variables.values() %}
+        {{profile.to_html()}}
+        {% endfor %}
+    </div>
 </body>

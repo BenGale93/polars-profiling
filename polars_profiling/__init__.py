@@ -22,6 +22,7 @@ PROFILER_TYPES: list[type[profiles.BaseProfiler[profiles.BaseProfile]]] = [
     profiles.BasicTemporalProfiler,
     profiles.QuantileProfiler,
     profiles.StatsProfiler,
+    profiles.StringProfiler,
 ]
 
 

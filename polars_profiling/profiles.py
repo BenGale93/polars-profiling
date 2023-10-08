@@ -36,6 +36,9 @@ class BaseProfiler(ABC, Generic[T_co]):
     def summarise(self, df: pl.DataFrame) -> dict[str, T_co]:
         sub_df = df.select(self.dtype_filter())
 
+        if len(sub_df.columns) == 0:
+            return {}
+
         results = sub_df.select(self.summary_expression()).row(0)
 
         n_cols = len(sub_df.columns)
@@ -50,7 +53,7 @@ class BaseProfiler(ABC, Generic[T_co]):
 @dataclass(slots=True)
 class NumericProfile:
     null_count: int
-    distinct: float
+    distinct: int
     infinite: int
     mean: float
     minimum: float
@@ -120,7 +123,7 @@ class QuantileProfiler(BaseProfiler[QuantileProfile]):
 @dataclass(slots=True)
 class BasicTemporalProfile:
     null_count: int
-    distinct: float
+    distinct: int
     minimum: datetime
     maximum: datetime
 
@@ -169,3 +172,34 @@ class StatsProfiler(BaseProfiler[StatsProfile]):
 
     def result_constructor(self, *args: Any) -> StatsProfile:
         return StatsProfile(*args)
+
+
+@dataclass(slots=True)
+class StringProfile:
+    null_count: int
+    distinct: int
+    min_length: int
+    median_length: int
+    mean_length: float
+    max_length: int
+
+    def to_html(self) -> str:
+        return templates.render("text.html", profile=self)
+
+
+class StringProfiler(BaseProfiler[StringProfile]):
+    def summary_expression(self) -> list[pl.Expr]:
+        return [
+            pl.all().null_count().prefix("null_count:"),
+            pl.all().unique().len().prefix("unique:"),
+            pl.all().str.lengths().min().prefix("min_length:"),
+            pl.all().str.lengths().median().prefix("median_length:"),
+            pl.all().str.lengths().mean().prefix("mean_length:"),
+            pl.all().str.lengths().max().prefix("max_length:"),
+        ]
+
+    def dtype_filter(self) -> SelectorType:
+        return cs.string()
+
+    def result_constructor(self, *args: Any) -> StringProfile:
+        return StringProfile(*args)

@@ -6,3 +6,10 @@
         <tr><th>Duplicates</th><td>{{table.duplicates}}</td></tr>
     </tbody>
 </table>
+<table>
+    <tbody>
+        {% for k,v in table.variable_types.items() %}
+        <tr><th>{{k}}</th><td>{{v}}</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
